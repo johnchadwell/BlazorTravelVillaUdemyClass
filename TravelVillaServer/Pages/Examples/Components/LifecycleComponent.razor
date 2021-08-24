@@ -1,0 +1,41 @@
+﻿<h3>LifecycleComponent</h3>
+
+@foreach (var item in events)
+{
+    @item
+    <hr />
+}
+
+@code {
+    [Parameter]
+    public int currentCount { get; set; }
+
+    private List<string> events = new List<string>();
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        events.Add("LifecycleComponent.OnInitialized");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        events.Add(".LifecycleComponentOnInitializedAsync");
+        await Task.Delay(1);
+    }
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        events.Add("LifecycleComponent.OnParametersSet");
+    }
+    protected override Task OnParametersSetAsync()
+    {
+        return base.OnParametersSetAsync();
+        events.Add("LifecycleComponent.OnParametersSetAsync");
+    }
+
+}

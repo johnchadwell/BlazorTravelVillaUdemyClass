@@ -1,0 +1,102 @@
+﻿@inject NavigationManager NavMgr
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">TravelVillaServer</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <p class="text-light">TravelVilla Admin</p>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="hotel-room" Match="NavLinkMatch.All">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Hotel Room
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="hotel-amenity">
+                <div class="oi oi-list-rich" aria-hidden="true"></div><div>Hotel Amenity</div>
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="hotel-room-order">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Hotel Orders
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <p class="text-light mt-5">Blazor Class Pages</p>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="bindprop">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Bind Properties
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="demohotel">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Demo Hotel
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="lifecycle">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> LifeCycle
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="parentcomponent">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Parent/Child Relation
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="routing">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Routing
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="blazorjs">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> BlazorJS
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <a @onclick="@(async () => await GoTo())">login</a>
+        </li>
+        <li class="nav-item px-3">
+            <a href="Identity/Account/Login">Logout</a>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+    private async Task GoTo()
+    {
+        //NavMgr.NavigateTo("hotel-room");
+        NavMgr.NavigateTo("Identity/Account/Login", true);
+        //// NOTE: ONLY worked with true on Force paramter
+    }
+}

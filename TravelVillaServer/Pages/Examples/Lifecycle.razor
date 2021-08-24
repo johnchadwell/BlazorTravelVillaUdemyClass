@@ -1,0 +1,93 @@
+﻿@page "/lifecycle"
+@using TravelVillaServer.Pages.Examples.Components
+@using System.Threading
+
+<LifecycleComponent currentCount="currentCount"></LifecycleComponent>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<br /> @count  <button class="btn btn-primary" @onclick="StartCountdown">Start Countdown</button>
+
+@foreach (var item in events)
+{
+    @item
+    <hr />
+}
+
+
+@code {
+    private int currentCount = 0;
+    private int count { get; set; } = 5;
+    private List<string> events = new List<string>();
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    protected override void OnInitialized()
+    {
+        events.Add("OnInitialized");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        events.Add("OnInitializedAsync");
+        await Task.Delay(1);
+    }
+    protected override void OnParametersSet()
+    {
+        events.Add("OnParametersSet");
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        events.Add("OnParametersSetAsync");
+        await Task.Delay(1);
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            events.Add("OnAfterRender first");
+            // use this to set anything after it has already rendered the first time
+        }
+        else
+        {
+            events.Add("OnAfterRender after first");
+            // use this to set anything after it has already rendered after the first time
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            events.Add("OnAfterRenderAsync first");
+            // use this to set anything after it has already rendered the first time
+        }
+        else
+        {
+            events.Add("OnAfterRenderAsync after first");
+            // use this to set anything after it has already rendered after the first time
+        }
+        await Task.Delay(1);
+    }
+    protected override bool ShouldRender()
+    {
+        events.Add("ShouldRender");
+        // true means perform the render
+        return true;
+    }
+    void StartCountdown()
+    {
+        var timer = new Timer(TimerCallback, null, 1000, 1000);
+
+    }
+    void TimerCallback(object state)
+    {
+        if (count > 0)
+        {
+            count--;
+            InvokeAsync(StateHasChanged);
+        }
+
+    }
+}

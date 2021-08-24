@@ -1,0 +1,63 @@
+﻿@page "/blazorjs"
+@inject IJSRuntime JSRun
+
+<h3>BlazorJS</h3>
+
+<div class="row">
+    <btn class="btn btn-outline-primary" @onclick="ClickConfirm">Confirm</btn>
+</div>
+<div class="row">
+    <btn class="btn btn-outline-primary" @onclick="(()=>ClickConfirm2(cmsg))">Confirm2</btn>
+</div>
+<div class="row">
+    <btn class="btn btn-primary" @onclick="TestSuccess">Confirm</btn>
+    <btn class="btn btn-danger" @onclick="TestError">Confirm</btn>
+</div>
+<div class="row">
+    <btn class="btn btn-primary" @onclick="TestSwAlSuccess">Confirm</btn>
+    <btn class="btn btn-danger" @onclick="TestSwAlError">Confirm</btn>
+</div>
+<div class="row">
+    @if (cresult)
+    {
+        <p>confirmed!</p>
+    }
+    else
+    {
+        <p>Nope!</p>
+    }
+</div>
+
+@code {
+    private string cmsg = "Sure?";
+    private bool cresult { get; set; }
+    public async Task ClickConfirm()
+    {
+        cresult = await JSRun.InvokeAsync<bool>("confirm", cmsg);
+    }
+    public async Task ClickConfirm2(string msg)
+    {
+        cresult = await JSRun.InvokeAsync<bool>("confirm", msg);
+    }
+    public async Task TestSuccess()
+    {
+        //await JSRun.InvokeVoidAsync("showmsg", "success", "hello");
+        await JSRun.ToastrSuccess("done");
+    }
+    public async Task TestError()
+    {
+        //await JSRun.InvokeVoidAsync("showmsg", "error", "hello again");
+        await JSRun.ToastrError("not done");
+    }
+    public async Task TestSwAlSuccess()
+    {
+        await JSRun.InvokeVoidAsync("showsalert", "success", "hello");
+        //await JSRun.ToastrSuccess("done");
+    }
+    public async Task TestSwAlError()
+    {
+        await JSRun.InvokeVoidAsync("showsalert", "error", "hello again");
+        //await JSRun.("not done");
+    }
+
+}

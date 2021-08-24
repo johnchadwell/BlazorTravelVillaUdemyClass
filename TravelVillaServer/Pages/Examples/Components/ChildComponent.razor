@@ -1,0 +1,38 @@
+﻿@inject IJSRuntime JSRun
+<div>
+    <div class="alert alert-info">@Title</div>
+    <div class="alert alert-success">
+        @if (ChildContent == null)
+        {
+            <span>empty child content</span>
+        }
+        else
+        {
+            <span>@ChildContent</span>
+        }
+    </div>
+    <div class="alert alert-info">
+        <span>@ChildContent2</span>
+    </div>
+    <button class="btn btn-danger" @onclick="OnClickBtnMethod">ClickMe</button>
+    <GrandChildComponent MessageForGrandChild="@MessageForGrandChild"></GrandChildComponent>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent2 { get; set; }
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickBtnMethod { get; set; }
+    [Parameter]
+    public string MessageForGrandChild { get; set; }
+
+    public async Task ShowToastrSucc(string msg)
+    {
+        await JSRun.ToastrSuccess(msg);
+    }
+
+}

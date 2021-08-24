@@ -1,0 +1,53 @@
+﻿@page "/ParentComponent"
+
+<h3>ParentComponent</h3>
+
+<h1 class="text-danger">Parent Child Component</h1>
+
+<CascadingValue Value="CascadedValueFromParent" Name="A">
+    <CascadingValue Value="LuckyNbr" Name="B">
+        <ChildComponent @ref="childCpmnt" OnClickBtnMethod="ShowMessage" Title="Title from paremt">
+            <ChildContent>ChildContent from Render Fragment</ChildContent>
+            <ChildContent2>ChildContent2 from Render Fragment</ChildContent2>
+        </ChildComponent>
+    </CascadingValue>
+</CascadingValue>
+<ChildComponent OnClickBtnMethod="ShowMessageAgain" MessageForGrandChild="Super Parent Message" Title="This is second Child Compoment">
+
+    Render Fragment from Parent Again
+
+</ChildComponent>
+<AnotherChildComponent InputAttr="InputAttrFromParent"></AnotherChildComponent>
+<AnotherChildComponent placeholder="default"></AnotherChildComponent>
+
+<p><b>@messageText</b></p>
+
+<div class="=row">
+    <button class="btn btn-success" @onclick="(()=>childCpmnt.ShowToastrSucc(toastrmsg))">test Toastr</button>
+</div>
+
+
+@code {
+
+    private ChildComponent childCpmnt;
+    private string toastrmsg { get; set; } = new string("testing...");
+    private string CascadedValueFromParent = "Cascaded Message";
+    public int LuckyNbr { get; set; } = 7;
+    private string messageText = "";
+    private void ShowMessage(MouseEventArgs e)
+    {
+        messageText = "text from parent";
+    }
+    private void ShowMessageAgain(MouseEventArgs e)
+    {
+        messageText = "text from parent again";
+    }
+    [Parameter]
+    public Dictionary<string, object> InputAttrFromParent { get; set; } = new Dictionary<string, object>()
+{
+        {"required", "required" },
+        {"placeholder", "Initial Text From Parent" },
+        {"maxlength", 5 },
+    };
+
+}

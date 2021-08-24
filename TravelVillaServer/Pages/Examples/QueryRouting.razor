@@ -1,0 +1,31 @@
+﻿@page "/QueryRouting"
+@inject NavigationManager NavigationManager
+
+<h3>Routing</h3>
+<h4>Param1: @param1</h4>
+<h4>Param2: @param2</h4>
+
+
+<button class="btn btn-primary" @onclick="loadParameters">Load Params</button>
+
+<button class="btn btn-primary" @onclick="navigateBack">Back Btn</button>
+<NavLink class="btn btn-secondary" href="routing">Navlink Back</NavLink>
+<a class="btn btn-secondary" href="/routing">Back</a>
+
+@code {
+
+    private string param1 { get; set; }
+    private string param2 { get; set; }
+
+    private void loadParameters()
+    {
+        var absUri = new Uri(NavigationManager.Uri);
+        var queryParam = System.Web.HttpUtility.ParseQueryString(absUri.Query);
+        param1 = queryParam["param1"];
+        param2 = queryParam["param2"];
+    }
+    private void navigateBack()
+    {
+        NavigationManager.NavigateTo("routing");
+    }
+}

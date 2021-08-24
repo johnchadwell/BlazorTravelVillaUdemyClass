@@ -1,0 +1,109 @@
+﻿@page "/hotel-room"
+@using Models
+@using Business.Repository.IRepository
+@inject IHotelRoomRepository HRRepo
+@inject IJSRuntime JSRun
+@inject TravelVillaServer.Service.IService.IFileUpload FileUpload
+@inject NavigationManager navmgr
+
+@attribute [Authorize(Roles = Common.SD.Role_Admin)]
+
+
+<h3>HoteRoomList</h3>
+
+<div class="row mt-4">
+    <div class="col-8">
+        <h4 class="card-title text-info">Hotel Rooms</h4>
+    </div>
+    <div class="col-3 offset-1">
+        <NavLink href="hotel-room/create" class="btn btn-info form-control">Add New Room</NavLink>
+
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-12">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Occupancy</th>
+                    <th>Rate</th>
+                    <th>SqFt</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Rooms.Any())
+                {
+                    foreach (var r in Rooms)
+                    {
+                        <tr>
+                            <td>@r.Name</td>
+                            <td>@r.Occupancy</td>
+                            <td>@r.RegularRate.ToString("c")</td>
+                            <td>@r.SqFt</td>
+                            <td>
+                                <NavLink href="@($"hotel-room/edit/{r.Id}")" class="btn btn-primary">Edit</NavLink>
+                                <button class="btn btn-danger" @onclick="()=>HandleDelete(r.Id)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">Nope!</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+        <h4 class="card-title text-info">Hotel Rooms</h4>
+    </div>
+</div>
+
+<DeleteComponent ConfirmationChanged="ConfirmDelete_Click"></DeleteComponent>
+
+@code {
+
+
+    private IEnumerable<HotelRoomDTO> Rooms { get; set; } = new List<HotelRoomDTO>();
+    private int? DeleteRoomId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Rooms = await HRRepo.GetAllHotelRooms();
+
+
+    }
+    private async Task HandleDelete(int roomId)
+    {
+        DeleteRoomId = roomId;
+        await JSRun.InvokeVoidAsync("ShowDeleteConfirmModal");
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //await JSRun.InvokeVoidAsync("ShowDeleteConfirmModal");
+
+    }
+
+    public async Task ConfirmDelete_Click(bool IsConfirmed)
+    {
+        if (IsConfirmed && DeleteRoomId != null)
+        {
+            HotelRoomDTO room = await HRRepo.GetHotelRoom(DeleteRoomId.Value);
+            foreach (var image in room.Images)
+            {
+                var imName = image.RoomImageUrl.Replace($"{navmgr.BaseUri}RoomImages/", "");
+                FileUpload.DeleteFile(imName);
+            }
+            await HRRepo.DeleteHotelRoom(DeleteRoomId.Value);
+            await JSRun.ToastrSuccess("Delete Success");
+            Rooms = await HRRepo.GetAllHotelRooms();
+        }
+        await JSRun.InvokeVoidAsync("HideDeleteConfirmModal");
+        Console.WriteLine("ConfirmDelete Complete");
+    }
+
+
+}

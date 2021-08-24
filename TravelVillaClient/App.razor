@@ -1,0 +1,19 @@
+<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <Authorizing>
+                <p>Please wait, we are authorizing the user.</p>
+            </Authorizing>
+            <NotAuthorized>
+                <TravelVillaClient.Pages.Authentication.RedirectToLogin></TravelVillaClient.Pages.Authentication.RedirectToLogin>
+            </NotAuthorized>
+        </AuthorizeRouteView>
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>

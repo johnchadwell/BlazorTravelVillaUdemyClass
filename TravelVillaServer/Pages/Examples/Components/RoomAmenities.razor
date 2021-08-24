@@ -1,0 +1,27 @@
+﻿@using TravelVillaServer.Model
+
+<div class="bg-light border p-2 col-5" @onclick="(args)=>AmenitySelectionChanged(args, Amenity.Name)">
+    <h4 class="text-secondary">Amenities - @Amenity.Id</h4>
+
+    @Amenity.Name <br />
+    @Amenity.Desc <br />
+    RF from parent - @FirstFragment @SecondFragment
+</div>
+
+
+
+@code {
+    [Parameter]
+    public BlazorAmenities Amenity { get; set; }
+    [Parameter]
+    public RenderFragment FirstFragment { get; set; }
+    [Parameter]
+    public RenderFragment SecondFragment { get; set; }
+    [Parameter]
+    public EventCallback<string> OnAmenitySelection  { get; set; }
+    protected async Task AmenitySelectionChanged (MouseEventArgs e, string name)
+    {
+        await OnAmenitySelection.InvokeAsync((string)name);
+    }
+
+}
